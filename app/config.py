@@ -1,4 +1,5 @@
-from pydantic import AnyHttpUrl, BaseSettings
+from pydantic import AnyHttpUrl
+from pydantic_settings import BaseSettings
 from fastapi.logger import logger as fast_api_logger
 from typing import List
 import secrets
