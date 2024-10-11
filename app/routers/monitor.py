@@ -36,6 +36,24 @@ async def get_monitor(monitor_id:int=Path(...) , cur_user: API = Depends(get_cur
 
     raise HTTPException(404, {"message": "Monitor not found !"})
 
+@router.get("/{monitor_id}/status", description="Get Monitor Status")
+async def get_monitor_status(monitor_id:int=Path(...) , cur_user: API = Depends(get_current_user)):
+    api: UptimeKumaApi = cur_user['api']
+
+    if monitor_id :
+        try:
+            status = api.get_monitor_status(monitor_id)
+        except UptimeKumaException as e:
+            logging.info(e)
+            raise HTTPException(404, {"message": "Monitor not found !"})
+        except Exception as e :
+            logging.fatal(e)
+            raise HTTPException(500, str(e))
+
+        return {"status": status }
+
+    raise HTTPException(404, {"message": "Monitor not found !"})
+
 
 @router.post("", description="Create a Monitor")
 async def create_monitor(monitor: Monitor,cur_user: API = Depends(get_current_user)):
